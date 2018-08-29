@@ -36,7 +36,7 @@ android {
             buildConfigField "String", "apiVersion", "\"v1.0\""
             buildConfigField "String", "CHANNEL", "\"default\""
             signingConfig android.signingConfigs.debug
-            minifyEnabled false
+            minifyEnabled true
             multiDexEnabled true
             debuggable true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -46,7 +46,7 @@ android {
         release {
             buildConfigField "String", "HOST_URL", rootProject.ext.releaseHostUrl
             signingConfig android.signingConfigs.releaseConfig
-            minifyEnabled false
+            minifyEnabled true
             multiDexEnabled true
             debuggable false
             buildConfigField "String", "CHANNEL", "\"default\""
@@ -58,7 +58,7 @@ android {
         releaseChannel {
             buildConfigField "String", "HOST_URL", rootProject.ext.releaseHostUrl
             signingConfig android.signingConfigs.releaseConfig
-            minifyEnabled false
+            minifyEnabled true
             multiDexEnabled true
             debuggable false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'

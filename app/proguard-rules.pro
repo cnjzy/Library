@@ -74,6 +74,16 @@
     public void *(...);
 }
 
+-keepclassmembers class * extends android.support.multidex.MultiDexApplication {
+    public *;
+    public void *(...);
+}
+
+-keepclassmembers class * extends android.app.Application {
+    public *;
+    public void *(...);
+}
+
 
 # eventbus
 -keepattributes *Annotation*

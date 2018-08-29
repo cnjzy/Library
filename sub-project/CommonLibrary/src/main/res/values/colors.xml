@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#333333</color>
+    <color name="colorPrimaryDark">#333333</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="white">#ffffff</color>
+    <color name="black">#ff000000</color>
+    <!-- 灰色线背静 -->
+    <color name="line_gray">#E0E0E0</color>
+    <!-- 图片选择器背景 -->
+    <color name="pic_select_bg">#F4F4F4</color>
+    <!-- 表情列表背景 -->
+    <color name="face_bg">#eef1f4</color>
+    <!-- 标题颜色 -->
+    <color name="navigation_title_color">#333333</color>
+    <!-- 副标题颜色 -->
+    <color name="navigation_subtitle_color">#999999</color>
+    <!-- 副标题颜色 -->
+    <color name="gray">#AAAAAA</color>
+    <!-- 红色 -->
+    <color name="red">#F8403D</color>
+    <!-- 聊天缩略图背景 -->
+    <color name="chat_image_msg_bg">#EBEBEB</color>
+    <!-- 聊天缩略图背景 -->
+    <!-- 话题详情用户列表背景 -->
+    <color name="topic_detail_user_list_bg">#4C000000</color>
+    <!-- 话题详情用户列表背景 -->
+    <color name="topic_detail_user_list_pre_bg">#7F000000</color>
+    <!-- 话题评论背景 -->
+    <color name="topic_comment_bg">#F2F2F2</color>
+    <!-- 评论回复更多文字颜色 -->
+    <color name="comment_reply_more">#027FDA</color>
+    <!-- 灰色背景 -->
+    <color name="gray_bg">#F2F2F2</color>
+</resources>

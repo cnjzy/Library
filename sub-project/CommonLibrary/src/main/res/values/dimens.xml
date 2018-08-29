@@ -1,0 +1,19 @@
+<resources>
+    <!-- 线高度 -->
+    <dimen name="global_line_size">1px</dimen>
+    <!-- 聊天评论线 -->
+    <dimen name="chat_comment_line_size">1dp</dimen>
+    <!-- 圆角图片角度 -->
+    <dimen name="glide_round_angle">8px</dimen>
+
+    <!-- 用的比较多的margin -->
+    <dimen name="globel_margin">15dp</dimen>
+
+    <dimen name="action_bar_height">48dp</dimen>
+
+    <!-- 列表线宽度 -->
+    <dimen name="global_list_line_size">12dp</dimen>
+
+    <!-- 公用头部高度 -->
+    <dimen name="navigation_height">48dp</dimen>
+</resources>

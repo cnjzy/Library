@@ -1,0 +1,31 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile project(':sub-project:ucrop')
+    //noinspection GradleCompatible
+    compile "com.android.support:appcompat-v7:26.0.1"
+    //noinspection GradleCompatible
+    provided "com.android.support:recyclerview-v7:26.0.1"
+    provided "com.github.bumptech.glide:glide:4.5.0"
+    provided "io.reactivex.rxjava2:rxjava:2.1.1"
+    provided "io.reactivex.rxjava2:rxandroid:2.0.1"
+}

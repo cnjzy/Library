@@ -1,0 +1,60 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    repositories {
+        jcenter()
+        maven {
+            url 'https://maven.google.com/'
+            name 'Google'
+        }
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.3.2'
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter()
+        mavenCentral()
+        maven {
+            url 'https://maven.google.com/'
+            name 'Google'
+        }
+
+        configurations {
+            all*.exclude group: 'com.android.support', module: 'support-v4'
+        }
+    }
+}
+
+project.ext {
+    compileSdkVersion = 26
+    buildToolsVersion = "26.0.1"
+    minSdkVersion = 19
+    targetSdkVersion = 26
+    versionCode = 102
+    versionName = "1.0.0"
+    abortOnError = false //执行lint检查，有任何的错误或者警告提示，都会终止构建，我们可以将其关掉。
+    debugHostUrl = "\"http://devapi.zhuannews.cn/\""
+    releaseHostUrl = "\"https://api.zhuannews.cn/\""
+}
+
+
+def getSdkDir() {
+    def SDK_DIR = System.getenv("ANDROID_HOME")
+    if (SDK_DIR == null) {
+        Properties props = new Properties()
+        props.load(new FileInputStream(project.rootProject.file("local.properties")))
+        SDK_DIR = props.get('sdk.dir')
+    }
+    return SDK_DIR
+}
+
+
+def releaseTime() {
+    return new Date().format("yyyy-MM-dd", TimeZone.getTimeZone("UTC"))
+}

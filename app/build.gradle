@@ -1,0 +1,163 @@
+apply plugin: 'com.android.application'
+
+repositories {
+    flatDir {
+        dirs '../libs', '../ExternalAAR'
+    }
+}
+
+android {
+    signingConfigs {
+        releaseConfig {
+            storeFile file("buildkey/HotSpotSign.jks")
+            storePassword "hotspot"
+            keyAlias "hotspotsign"
+            keyPassword "hotspot"
+        }
+    }
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+    defaultConfig {
+        applicationId "com.mynews.app"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode rootProject.ext.versionCode
+        versionName rootProject.ext.versionName
+        multiDexEnabled true //分包
+
+        ndk {
+            // 设置支持的 SO 库构架
+            abiFilters 'armeabi'//, 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64', 'mips', 'mips64'
+        }
+    }
+    buildTypes {
+        debug {
+            buildConfigField "String", "HOST_URL", rootProject.ext.debugHostUrl
+            buildConfigField "String", "apiVersion", "\"v1.0\""
+            buildConfigField "String", "CHANNEL", "\"default\""
+            signingConfig android.signingConfigs.debug
+            minifyEnabled false
+            multiDexEnabled true
+            debuggable true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            //manifestPlaceholders = [app_name: "魔漫相机", icon: "@mipmap/ic_launcher"]
+        }
+
+        release {
+            buildConfigField "String", "HOST_URL", rootProject.ext.releaseHostUrl
+            signingConfig android.signingConfigs.releaseConfig
+            minifyEnabled false
+            multiDexEnabled true
+            debuggable false
+            buildConfigField "String", "CHANNEL", "\"default\""
+            buildConfigField "String", "apiVersion", "\"v1.0\""
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            //manifestPlaceholders = [app_name: "魔漫相机", icon: "@mipmap/ic_launcher"]
+        }
+
+        releaseChannel {
+            buildConfigField "String", "HOST_URL", rootProject.ext.releaseHostUrl
+            signingConfig android.signingConfigs.releaseConfig
+            minifyEnabled false
+            multiDexEnabled true
+            debuggable false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.releaseConfig
+
+            applicationVariants.all { variant ->
+                variant.outputs.each { output ->
+                    def outputFile = output.outputFile
+                    if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                        // 输出apk名称为zejian_v1.0_2015-01-15_wandoujia.apk
+                        def fileName = "base_app_v${defaultConfig.versionName}_${releaseTime()}_${variant.productFlavors[0].name}_release.apk"
+                        output.outputFile = new File(outputFile.parent, fileName)
+                    }
+                }
+            }
+        }
+    }
+
+    //配置多渠道
+    productFlavors {
+        www {
+        }
+        vivo {
+        }
+        oppo {
+        }
+        huawei {
+        }
+        yingyongbao {
+        }
+        xiaomi {
+        }
+        wandongjia {
+        }
+        baidu {
+        }
+        _360 {
+        }
+        anzhi {
+        }
+        app {
+        }
+        anzhuo {
+        }
+        _91 {
+        }
+        jinli {
+        }
+        meizu {
+        }
+        lianxiang {
+        }
+        leshi {
+        }
+        nubiya {
+        }
+        zhongxing {
+        }
+
+        productFlavors.all { flavor ->
+            flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
+        }
+    }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+}
+
+dependencies {
+
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    compile 'com.android.support:multidex:1.0.1'
+
+    compile files('../ExternalAAR/ormlite-android-4.48.jar')
+    compile files('../ExternalAAR/ormlite-core-4.48.jar')
+    compile files('../ExternalAAR/eventbus-3.1.1.jar')
+    compile 'com.android.support:support-v4:26.0.1'
+    compile "com.github.bumptech.glide:glide:4.5.0"
+    compile 'com.android.support:recyclerview-v7:26.0.1'
+    compile 'com.android.support:design:26.0.1'
+
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
+    compile 'com.jakewharton:butterknife:8.4.0'
+
+    compile project(':sub-project:CommonLibrary')
+    compile project(':sub-project:BaseLibrary')
+    compile project(':sub-project:xrecyclerview')
+    compile project(':sub-project:ThirdCoordinator')
+    compile project(':sub-project:HttpLibrary')
+    compile project(':sub-project:jiaozivideoplayer')
+    compile project(':sub-project:picture_library')
+
+
+}

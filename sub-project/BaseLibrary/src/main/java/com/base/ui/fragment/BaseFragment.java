@@ -3,16 +3,16 @@ package com.base.ui.fragment;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
-import com.base.listener.IOnClickListenerIntercept;
-import com.base.listener.OnClickInterceptListenerImpl;
+import com.base.R;
+import com.base.ui.navigation.NavigationWrap;
 import com.base.ui.presenter.IBaseMvpPresenter;
 import com.base.ui.presenter.PresenterFactory;
 import com.base.ui.view.IBaseMvpView;
@@ -33,9 +33,9 @@ public abstract class BaseFragment<P extends IBaseMvpPresenter> extends Fragment
     private ITipBaseUI mTipBaseUI;
     protected View mRootView;
     protected Context mContext;
-    private IOnClickListenerIntercept mLoginIntercept;
 
     private IBaseMvpPresenter mPresenter = null;
+    private NavigationWrap mNavigationWrap = null;
 
     protected Handler mHandler = new Handler();
 
@@ -56,12 +56,7 @@ public abstract class BaseFragment<P extends IBaseMvpPresenter> extends Fragment
         mContext = context;
         initTipUI();
         init();
-        initIntercept();
         createPresenter();
-    }
-
-    private void initIntercept() {
-        mLoginIntercept = new OnClickInterceptListenerImpl();
     }
 
     private void initTipUI() {
@@ -125,7 +120,8 @@ public abstract class BaseFragment<P extends IBaseMvpPresenter> extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (mRootView == null && getContentViewRsId() > 0) {
-            mRootView = inflater.inflate(getContentViewRsId(), container, false);
+            mRootView = inflater.inflate(R.layout.layout_container_base, container, false);
+            initConetentView(inflater);
             if (mRootView.getParent() != null) {
                 ((ViewGroup) mRootView.getParent()).removeView(mRootView);
             }
@@ -139,6 +135,32 @@ public abstract class BaseFragment<P extends IBaseMvpPresenter> extends Fragment
         return mRootView;
     }
 
+    private void initConetentView(LayoutInflater inflater) {
+        LinearLayout containerLl = findViewById(R.id.container_ll);
+        if (containerLl != null && getContentViewRsId() > 0) {
+            containerLl.removeAllViews();
+            inflater.inflate(getContentViewRsId(), containerLl);
+        }
+    }
+
+    protected NavigationWrap initNavigationView() {
+        return initNavigationView(R.layout.view_navigation_base);
+    }
+
+    protected NavigationWrap initNavigationView(int layoutId) {
+        if (mNavigationWrap == null) {
+            mNavigationWrap = new NavigationWrap(mContext, layoutId);
+        }
+
+        LinearLayout navigationLl = findViewById(R.id.navigation_ll);
+        if (navigationLl != null && mNavigationWrap.build() != null) {
+            navigationLl.removeAllViews();
+            navigationLl.addView(mNavigationWrap.build());
+            setViewVisible(R.id.navigation_line_iv, View.VISIBLE);
+        }
+
+        return mNavigationWrap;
+    }
 
     @Override
     public void onDestroy() {
@@ -154,25 +176,10 @@ public abstract class BaseFragment<P extends IBaseMvpPresenter> extends Fragment
                 DeviceUtils.hideIMM(getContext(), getActivity().getCurrentFocus());
             }
         }
-        if (mLoginIntercept.onInterceptClick(v)) {
-            return;
-        }
         onClickDispatch(v);
     }
 
     public abstract void onClickDispatch(View v);
-
-
-    /**
-     * 添加需要登录拦截的ID和类型
-     *
-     * @param id   需要拦截的ID
-     * @param type 登录类型 UserUtils.LOGIN_LAUNCH_TYPE_DIALOG 弹窗 UserUtils.LOGIN_LAUNCH_TYPE_ACTIVITY
-     */
-    protected void addLoginInterceptId(int id, int type, int source) {
-        mLoginIntercept.addOnClickInterceptId(id, type, source);
-    }
-
 
     /**
      * 获取视图

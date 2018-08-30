@@ -37,6 +37,7 @@ public class SplashActivity extends BaseActivity {
     @Override
     public void setViewsValue() {
         initStatusBar();
+        initNavigationView().initBaseNavigation(this, "标题");
     }
 
     @Override

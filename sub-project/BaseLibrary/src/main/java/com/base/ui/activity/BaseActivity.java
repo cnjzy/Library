@@ -7,15 +7,15 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.CalendarContract;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.base.R;
-import com.base.listener.IOnClickListenerIntercept;
-import com.base.listener.OnClickInterceptListenerImpl;
+import com.base.ui.navigation.NavigationWrap;
 import com.base.ui.presenter.IBaseMvpPresenter;
 import com.base.ui.presenter.PresenterFactory;
 import com.base.ui.view.IBaseMvpView;
@@ -33,9 +33,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import butterknife.ButterKnife;
 
 /**
@@ -47,7 +44,6 @@ public abstract class BaseActivity<P extends IBaseMvpPresenter> extends Fragment
     protected Handler mHandler = new Handler();
     public final String TAG = getClass().getSimpleName();
     private ITipBaseUI mTipBaseUI = null;
-    private IOnClickListenerIntercept mLoginIntercept = null;
 
     private int activityCloseEnterAnimation = 0;
     private int activityCloseExitAnimation = 0;
@@ -57,10 +53,8 @@ public abstract class BaseActivity<P extends IBaseMvpPresenter> extends Fragment
 
     private IBaseMvpPresenter mPresenter = null;
 
-    // 用于过滤点击功能
-    private Map<Integer, Integer> mOnClickInterceptIds = new HashMap<>();
-
     private ViewHolderWrap mViewHolderWrap = null;
+    private NavigationWrap mNavigationWrap = null;
 
 
     protected void printLog(String content) {
@@ -114,22 +108,47 @@ public abstract class BaseActivity<P extends IBaseMvpPresenter> extends Fragment
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         printLog("===================" + getClass().getSimpleName());
-        if (getContentViewRsId() > 0) {
-            setContentView(getContentViewRsId());
-        }
+        setContentView(R.layout.layout_container_base);
+        initConetentView();
         ButterKnife.bind(this);
         registerEventBus();
         initViewHolderWrap();
         createPresenter();
         initTipUI();
         getActivityAnimation();
-        initIntercept();
         init();
         loadExpandView();
         initView();
         initListener();
         setViewsValue();
 
+    }
+
+    private void initConetentView() {
+        LinearLayout containerLl = findViewById(R.id.container_ll);
+        if (containerLl != null && getContentViewRsId() > 0) {
+            containerLl.removeAllViews();
+            LayoutInflater.from(this).inflate(getContentViewRsId(), containerLl);
+        }
+    }
+
+    protected NavigationWrap initNavigationView() {
+        return initNavigationView(R.layout.view_navigation_base);
+    }
+
+    protected NavigationWrap initNavigationView(int layoutId) {
+        if (mNavigationWrap == null) {
+            mNavigationWrap = new NavigationWrap(getApplicationContext(), layoutId);
+        }
+
+        LinearLayout navigationLl = findViewById(R.id.navigation_ll);
+        if (navigationLl != null && mNavigationWrap.build() != null) {
+            navigationLl.removeAllViews();
+            navigationLl.addView(mNavigationWrap.build());
+            setViewVisible(R.id.navigation_line_iv, View.VISIBLE);
+        }
+
+        return mNavigationWrap;
     }
 
     @Override
@@ -158,11 +177,7 @@ public abstract class BaseActivity<P extends IBaseMvpPresenter> extends Fragment
             DeviceUtils.hideIMM(mContext, getCurrentFocus());
         }
 
-        if (mLoginIntercept.onInterceptClick(v)) {
-            return;
-        }
         onClickDispatch(v);
-
     }
 
     @SuppressLint("ResourceType")
@@ -179,20 +194,6 @@ public abstract class BaseActivity<P extends IBaseMvpPresenter> extends Fragment
     }
 
     public abstract void onClickDispatch(View v);
-
-    /**
-     * 添加需要登录拦截的ID和类型
-     *
-     * @param id   需要拦截的ID
-     * @param type 登录类型 UserUtils.LOGIN_LAUNCH_TYPE_DIALOG 弹窗 UserUtils.LOGIN_LAUNCH_TYPE_ACTIVITY
-     */
-    protected void addOnClickLoginInterceptId(int id, int type, int source) {
-        mLoginIntercept.addOnClickInterceptId(id, type, source);
-    }
-
-    private void initIntercept() {
-        mLoginIntercept = new OnClickInterceptListenerImpl();
-    }
 
     private void initTipUI() {
         mTipBaseUI = new DefaultTipUI(mContext);

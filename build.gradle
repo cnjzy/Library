@@ -32,11 +32,11 @@ allprojects {
 }
 
 project.ext {
-    compileSdkVersion = 26
+    compileSdkVersion = 27
     buildToolsVersion = "26.0.1"
     minSdkVersion = 19
-    targetSdkVersion = 26
-    versionCode = 102
+    targetSdkVersion = 27
+    versionCode = 100
     versionName = "1.0.0"
     abortOnError = false //执行lint检查，有任何的错误或者警告提示，都会终止构建，我们可以将其关掉。
     debugHostUrl = "\"http://devapi.zhuannews.cn/\""

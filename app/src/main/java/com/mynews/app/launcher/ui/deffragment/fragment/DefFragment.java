@@ -32,7 +32,7 @@ public class DefFragment extends BaseFragment {
 
     @Override
     public void setViewsValue() {
-
+        initNavigationView().initBaseNavigation(getActivity(), "标题fragment");
     }
 
     @Override
